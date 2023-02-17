@@ -2,15 +2,26 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import ProductService from '@/service/ProductService';
 import { useLayout } from '@/layout/composables/layout';
+import SMPService from '@/service/SMPService';
 
 const { isDarkTheme, contextPath } = useLayout();
 
 const products = ref(null);
+
+const systemData = ref(null);
+let systemFrequency = ref([ { value: 0, unit: 'Hz', time: '...'} ]);
+let systemGeneration = ref([ { value: 0, unit: 'MW', time: '...'} ]);
+let voltaBus = ref([ { value: 0, unit: 'kV', time: '...'} ]);
+
+const generation = ref(null);
+
+let generationLabels = ref(null);
+
 const lineData = reactive({
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
         {
-            label: 'First Dataset',
+            label: 'VRA',
             data: [65, 59, 80, 81, 56, 55, 40],
             fill: false,
             backgroundColor: '#2f4860',
@@ -18,7 +29,7 @@ const lineData = reactive({
             tension: 0.4
         },
         {
-            label: 'Second Dataset',
+            label: 'IPP',
             data: [28, 48, 40, 19, 86, 27, 90],
             fill: false,
             backgroundColor: '#00bb7e',
@@ -33,14 +44,42 @@ const items = ref([
 ]);
 const lineOptions = ref(null);
 const productService = new ProductService();
+const smpService = new SMPService();
 
 onMounted(() => {
     productService.getProductsSmall().then((data) => (products.value = data));
+
+    setInterval(() => {
+        smpService.getSystemData().then((data) => {
+            (systemData.value = data)
+
+            systemFrequency.value.value = systemData.value['system_frequency']['value']
+            systemFrequency.value.unit = systemData.value['system_frequency']['unit']
+            systemFrequency.value.time = systemData.value['system_frequency']['update_time']
+
+            systemGeneration.value.value = systemData.value['system_generation']['value']
+            systemGeneration.value.unit = systemData.value['system_generation']['unit']
+            systemGeneration.value.time = systemData.value['system_generation']['update_time']
+
+            voltaBus.value.value = systemData.value['volta_bus']['value']
+            voltaBus.value.unit = systemData.value['volta_bus']['unit']
+            voltaBus.value.time = systemData.value['volta_bus']['update_time']
+
+            console.log(systemData.value['system_frequency']['value']);
+        })
+
+        smpService.getGeneration().then((data) => {
+            (generation.value = data)
+
+            
+        })
+    }, 60000);
 });
 
 const formatCurrency = (value) => {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 };
+
 const applyLightTheme = () => {
     lineOptions.value = {
         plugins: {
@@ -120,65 +159,67 @@ watch(
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Orders</span>
-                        <div class="text-900 font-medium text-xl">152</div>
+                        <span class="block text-500 font-medium mb-3">Losses (Dec 2022)</span>
+                        <div class="text-900 font-medium text-xl">4.36%</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                        <i class="pi pi-window-minimize text-blue-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">24 new </span>
-                <span class="text-500">since last visit</span>
+                <span class="text-red-500 font-medium">0.2% </span>
+                <span class="text-500">excess</span>
             </div>
         </div>
         <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Revenue</span>
-                        <div class="text-900 font-medium text-xl">$2.100</div>
+                        <span class="block text-500 font-medium mb-3">Total System Generation</span>
+                        <div class="text-900 font-medium text-xl">{{ systemGeneration.value }}MW</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-map-marker text-orange-500 text-xl"></i>
+                        <i class="pi pi-chart-bar text-orange-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">%52+ </span>
-                <span class="text-500">since last week</span>
+                <span class="text-orange-500 font-medium">{{ systemGeneration.time }}</span>
+                <!-- <span class="text-500">since last week</span> -->
+                <!-- <span class="text-500">{{ systemGeneration }}</span> -->
             </div>
         </div>
         <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Customers</span>
-                        <div class="text-900 font-medium text-xl">28441</div>
+                        <span class="block text-500 font-medium mb-3">System Frequency</span>
+                        <div class="text-900 font-medium text-xl">{{ systemFrequency.value }}Hz</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-inbox text-cyan-500 text-xl"></i>
+                        <i class="pi pi-chart-line text-cyan-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">520 </span>
-                <span class="text-500">newly registered</span>
+                <!-- <span class="text-green-500 font-medium">%52+ </span>
+                <span class="text-500">since last week</span> -->
+                <span class="text-cyan-500 font-medium">{{ systemFrequency.time }}</span>
             </div>
         </div>
         <div class="col-12 lg:col-6 xl:col-3">
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Comments</span>
-                        <div class="text-900 font-medium text-xl">152 Unread</div>
+                        <span class="block text-500 font-medium mb-3">Volta Bus</span>
+                        <div class="text-900 font-medium text-xl">{{ voltaBus.value }}kV</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-purple-100 border-round" style="width: 2.5rem; height: 2.5rem">
-                        <i class="pi pi-comment text-purple-500 text-xl"></i>
+                        <i class="pi pi-ticket text-purple-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">85 </span>
-                <span class="text-500">responded</span>
+                <span class="text-purple-500 font-medium">{{ voltaBus.time }}</span>
+                <!-- <span class="text-500">since last week</span> -->
             </div>
         </div>
 
         <div class="col-12 xl:col-6">
-            <div class="card">
+            <!-- <div class="card">
                 <h5>Recent Sales</h5>
                 <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
                     <Column style="width: 15%">
@@ -200,7 +241,7 @@ watch(
                         </template>
                     </Column>
                 </DataTable>
-            </div>
+            </div> -->
             <div class="card">
                 <div class="flex justify-content-between align-items-center mb-5">
                     <h5>Best Selling Products</h5>
@@ -287,10 +328,10 @@ watch(
         </div>
         <div class="col-12 xl:col-6">
             <div class="card">
-                <h5>Sales Overview</h5>
+                <h5>Generation</h5>
                 <Chart type="line" :data="lineData" :options="lineOptions" />
             </div>
-            <div class="card">
+            <!-- <div class="card">
                 <div class="flex align-items-center justify-content-between mb-4">
                     <h5>Notifications</h5>
                     <div>
@@ -339,17 +380,17 @@ watch(
                         </span>
                     </li>
                 </ul>
-            </div>
+            </div> -->
             <div
                 class="px-4 py-5 shadow-2 flex flex-column md:flex-row md:align-items-center justify-content-between mb-3"
                 style="border-radius: 1rem; background: linear-gradient(0deg, rgba(0, 123, 255, 0.5), rgba(0, 123, 255, 0.5)), linear-gradient(92.54deg, #1c80cf 47.88%, #ffffff 100.01%)"
             >
                 <div>
-                    <div class="text-blue-100 font-medium text-xl mt-2 mb-3">TAKE THE NEXT STEP</div>
-                    <div class="text-white font-medium text-5xl">Try PrimeBlocks</div>
+                    <div class="text-blue-100 font-medium text-xl mt-2 mb-3">Corporate News</div>
+                    <div class="text-white font-medium text-5xl">Weekly News Transmitter</div>
                 </div>
                 <div class="mt-4 mr-auto md:mt-0 md:mr-0">
-                    <a href="https://www.primefaces.org/primeblocks-vue" class="p-button font-bold px-5 py-3 p-button-warning p-button-rounded p-button-raised"> Get Started </a>
+                    <a href="#" class="p-button font-bold px-5 py-3 p-button-warning p-button-rounded p-button-raised"> Read </a>
                 </div>
             </div>
         </div>
