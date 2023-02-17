@@ -2,6 +2,8 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
+import { useCurrentTime } from '../composables/useCurrentTime';
+import DisplayTime from '../views/DisplayTime.vue';
 
 const { layoutConfig, onMenuToggle, contextPath } = useLayout();
 
@@ -58,6 +60,8 @@ const isOutsideClicked = (event) => {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
+
+const { currentTime } = useCurrentTime()
 </script>
 
 <template>
@@ -76,7 +80,7 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+            <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-calendar"></i>
                 <span>Calendar</span>
             </button>
@@ -87,7 +91,9 @@ const isOutsideClicked = (event) => {
             <button @click="onSettingsClick()" class="p-link layout-topbar-button">
                 <i class="pi pi-cog"></i>
                 <span>Settings</span>
-            </button>
+            </button> -->
+
+            <display-time></display-time>
         </div>
     </div>
 </template>

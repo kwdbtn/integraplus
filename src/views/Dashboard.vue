@@ -14,15 +14,21 @@ let systemGeneration = ref([ { value: 0, unit: 'MW', time: '...'} ]);
 let voltaBus = ref([ { value: 0, unit: 'kV', time: '...'} ]);
 
 const generation = ref(null);
+let vraData = ref([]);
+let ippData = ref([]);
+let generationLabels = ref([]);
 
-let generationLabels = ref(null);
+let time = ref(null);
+let date = ref(null);
 
 const lineData = reactive({
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: generationLabels,
     datasets: [
         {
             label: 'VRA',
-            data: [65, 59, 80, 81, 56, 55, 40],
+            // data: [65, 59, 80, 81, 56, 55, 40],
+            data: vraData,
             fill: false,
             backgroundColor: '#2f4860',
             borderColor: '#2f4860',
@@ -30,7 +36,8 @@ const lineData = reactive({
         },
         {
             label: 'IPP',
-            data: [28, 48, 40, 19, 86, 27, 90],
+            // data: [28, 48, 40, 19, 86, 27, 90],
+            data: ippData,
             fill: false,
             backgroundColor: '#00bb7e',
             borderColor: '#00bb7e',
@@ -71,10 +78,23 @@ onMounted(() => {
         smpService.getGeneration().then((data) => {
             (generation.value = data)
 
-            
+            vraData.value = convertJsonToArray(generation.value['vra'])
+            ippData.value = convertJsonToArray(generation.value['ipp'])
+            generationLabels.value = generation.value['keys']
+
+            console.log(convertJsonToArray(generation.value['vra']))
         })
     }, 60000);
 });
+
+const convertJsonToArray = (jsondata) => {
+    var result = [];
+
+    for (var i in jsondata)
+        result.push(parseFloat(jsondata[i]))
+
+    return result;
+}
 
 const formatCurrency = (value) => {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -244,7 +264,7 @@ watch(
             </div> -->
             <div class="card">
                 <div class="flex justify-content-between align-items-center mb-5">
-                    <h5>Best Selling Products</h5>
+                    <h5>Recent Products</h5>
                     <div>
                         <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
                         <Menu ref="menu2" :popup="true" :model="items"></Menu>
@@ -328,7 +348,7 @@ watch(
         </div>
         <div class="col-12 xl:col-6">
             <div class="card">
-                <h5>Generation</h5>
+                <h5>Generation (MW)</h5>
                 <Chart type="line" :data="lineData" :options="lineOptions" />
             </div>
             <!-- <div class="card">
