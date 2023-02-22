@@ -13,7 +13,7 @@ let systemFrequency = ref([ { value: 0, unit: 'Hz', time: '...'} ]);
 let systemGeneration = ref([ { value: 0, unit: 'MW', time: '...'} ]);
 let voltaBus = ref([ { value: 0, unit: 'kV', time: '...'} ]);
 const outages = ref(null);
-let outageArray = [];
+let outageArray = ref([]);
 
 const generation = ref(null);
 let vraData = ref([]);
@@ -87,10 +87,18 @@ onMounted(() => {
         smpService.getOutages().then((data) => {
             (outages.value = data)
 
-            // for (var i in outages.value)
-            //     outageArray.value.push(outages.value[(i).toString()])
-            
-            console.log(outages.value);
+            for (var i in outages.value) {
+                const outage = {type: '', from: '', to: '', status: '', equipment: []};
+                outage.type = outages.value[i]['type']
+                outage.from = outages.value[i]['from']
+                outage.to = outages.value[i]['to']
+                outage.status = outages.value[i]['status']
+                outage.equipment = outages.value[i]['equipment']
+                outageArray.value.push(outage)
+                console.log(outage.equipment);
+            }
+
+            console.log(outages.value[0]['equipment']);
         })
     }, 60000);
 });
@@ -111,6 +119,21 @@ const getEquipment = (data) => {
         result.push(data[i]['name'])
 
     return result;
+}
+
+const getProgressPercentage = (status) => {
+    var value = "";
+
+    if (status == "Pending")
+        value = "25%";
+    else if (status == "Dispatch Received")
+        value = "50%";
+    else if (status == "Planning Received")
+        value = "75%";
+    else
+        value = "100%";
+
+    return value;
 }
 
 const formatCurrency = (value) => {
@@ -262,74 +285,74 @@ watch(
                 <ul class="list-none p-0 m-0">
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">xx</span>
-                            <div class="mt-1 text-600">yy</div>
+                            <span v-for="equipment in outageArray[0].equipment" class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ equipment.name }}</span>
+                            <div class="mt-1 text-600">{{ outageArray[0].from }} - {{ outageArray[0].to }}</div>
                         </div>
                         <div class="mt-2 md:mt-0 flex align-items-center">
                             <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-orange-500 h-full" style="width: 50%"></div>
+                                <div class="bg-orange-500 h-full" :style="{width: getProgressPercentage(outageArray[0].status)}"></div>
                             </div>
-                            <span class="text-orange-500 ml-3 font-medium">%50</span>
+                            <span class="text-orange-500 ml-3 font-medium">{{ outageArray[0].status }}</span>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Portal Sticker</span>
-                            <div class="mt-1 text-600">Accessories</div>
+                            <span v-for="equipment in outageArray[1].equipment" class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ equipment.name }}</span>
+                            <div class="mt-1 text-600">{{ outageArray[1].from }} - {{ outageArray[1].to }}</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
                             <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-cyan-500 h-full" style="width: 16%"></div>
+                                <div class="bg-cyan-500 h-full" :style="{width: getProgressPercentage(outageArray[1].status)}"></div>
                             </div>
-                            <span class="text-cyan-500 ml-3 font-medium">%16</span>
+                            <span class="text-cyan-500 ml-3 font-medium">{{ outageArray[1].status }}</span>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Supernova Sticker</span>
-                            <div class="mt-1 text-600">Accessories</div>
+                            <span v-for="equipment in outageArray[2].equipment" class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ equipment.name }}</span>
+                            <div class="mt-1 text-600">{{ outageArray[2].from }} - {{ outageArray[2].to }}</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
                             <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-pink-500 h-full" style="width: 67%"></div>
+                                <div class="bg-pink-500 h-full" :style="{width: getProgressPercentage(outageArray[2].status)}"></div>
                             </div>
-                            <span class="text-pink-500 ml-3 font-medium">%67</span>
+                            <span class="text-pink-500 ml-3 font-medium">{{ outageArray[2].status }}</span>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Wonders Notebook</span>
-                            <div class="mt-1 text-600">Office</div>
+                            <span v-for="equipment in outageArray[3].equipment" class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ equipment.name }}</span>
+                            <div class="mt-1 text-600">{{ outageArray[3].from }} - {{ outageArray[3].to }}</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
                             <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-green-500 h-full" style="width: 35%"></div>
+                                <div class="bg-green-500 h-full" :style="{width: getProgressPercentage(outageArray[3].status)}"></div>
                             </div>
-                            <span class="text-green-500 ml-3 font-medium">%35</span>
+                            <span class="text-green-500 ml-3 font-medium">{{ outageArray[3].status }}</span>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Mat Black Case</span>
-                            <div class="mt-1 text-600">Accessories</div>
+                            <span v-for="equipment in outageArray[4].equipment" class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ equipment.name }}</span>
+                            <div class="mt-1 text-600">{{ outageArray[4].from }} - {{ outageArray[4].to }}</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
                             <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-purple-500 h-full" style="width: 75%"></div>
+                                <div class="bg-purple-500 h-full" :style="{width: getProgressPercentage(outageArray[4].status)}"></div>
                             </div>
-                            <span class="text-purple-500 ml-3 font-medium">%75</span>
+                            <span class="text-purple-500 ml-3 font-medium">{{ outageArray[4].status }}</span>
                         </div>
                     </li>
                     <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
                         <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0">Robots T-Shirt</span>
-                            <div class="mt-1 text-600">Clothing</div>
+                            <span v-for="equipment in outageArray[5].equipment" class="text-900 font-medium mr-2 mb-1 md:mb-0">{{ equipment.name }}</span>
+                            <div class="mt-1 text-600">{{ outageArray[5].from }} - {{ outageArray[5].to }}</div>
                         </div>
                         <div class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center">
                             <div class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem" style="height: 8px">
-                                <div class="bg-teal-500 h-full" style="width: 40%"></div>
+                                <div class="bg-teal-500 h-full" :style="{width: getProgressPercentage(outageArray[5].status)}"></div>
                             </div>
-                            <span class="text-teal-500 ml-3 font-medium">%40</span>
+                            <span class="text-teal-500 ml-3 font-medium">{{ outageArray[5].status }}</span>
                         </div>
                     </li>
                 </ul>
