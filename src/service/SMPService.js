@@ -10,4 +10,10 @@ export default class SMPService {
         const d = await res.json();
         return d.data;
     }
+
+    async getOutages() {
+        const res = await fetch('https://pom.gridcogh.com/api/outages');
+        const d = await res.json();
+        return d.data;
+    }
 }
