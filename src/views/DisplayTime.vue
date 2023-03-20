@@ -1,5 +1,5 @@
 <script setup>
-import { useCurrentTime } from "../composables/useCurrentTime";
+import { useCurrentTime } from '../composables/useCurrentTime';
 
 const { currentTime } = useCurrentTime();
 </script>
@@ -10,6 +10,4 @@ const { currentTime } = useCurrentTime();
     </div>
 </template>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

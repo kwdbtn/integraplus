@@ -11,54 +11,54 @@ const model = ref([
     {
         label: 'Applications',
         items: [
-            { 
-                label: 'GRIDSol (ERP)', 
-                icon: 'pi pi-fw pi-id-card', 
-                url: 'https://gridcoprod.operations.dynamics.com', 
-                target: '_blank' 
+            {
+                label: 'GRIDSol (ERP)',
+                icon: 'pi pi-fw pi-id-card',
+                url: 'https://gridcoprod.operations.dynamics.com',
+                target: '_blank'
             },
-            { 
-                label: 'GRIDCo Smart Workplace', 
-                icon: 'pi pi-fw pi-check-square', 
+            {
+                label: 'GRIDCo Smart Workplace',
+                icon: 'pi pi-fw pi-check-square',
                 url: 'http://intranet.gridcogh.com',
-                target: '_blank' 
+                target: '_blank'
             },
-            { 
-                label: 'KACE', 
-                icon: 'pi pi-fw pi-bookmark', 
-                url: 'http://kbox/',  
-                target: '_blank' 
+            {
+                label: 'KACE',
+                icon: 'pi pi-fw pi-bookmark',
+                url: 'http://kbox/',
+                target: '_blank'
             },
-            { 
-                label: 'P.O.M', 
-                icon: 'pi pi-fw pi-exclamation-circle', 
-                url: 'https://pom.gridcogh.com',  
-                target: '_blank' 
+            {
+                label: 'P.O.M',
+                icon: 'pi pi-fw pi-exclamation-circle',
+                url: 'https://pom.gridcogh.com',
+                target: '_blank'
             },
-            { 
-                label: 'GRIDCo SMP', 
-                icon: 'pi pi-fw pi-mobile', 
-                url: 'https://smp.gridcogh.com',  
-                target: '_blank',  
-                class: 'rotated-icon' 
-            },
-            { 
-                label: 'Telemetry', 
-                icon: 'pi pi-fw pi-table', 
-                url: 'https://telemetry.gridcogh.com',  
+            {
+                label: 'GRIDCo SMP',
+                icon: 'pi pi-fw pi-mobile',
+                url: 'https://smp.gridcogh.com',
                 target: '_blank',
+                class: 'rotated-icon'
             },
-            { 
-                label: 'Business Tracker', 
-                icon: 'pi pi-fw pi-list', 
-                url: 'https://businesstracker.gridcogh.com',  
-                target: '_blank', 
+            {
+                label: 'Telemetry',
+                icon: 'pi pi-fw pi-table',
+                url: 'https://telemetry.gridcogh.com',
+                target: '_blank'
             },
-            { 
-                label: 'Document Management', 
-                icon: 'pi pi-fw pi-share-alt', 
-                to: '/uikit/tree' 
+            {
+                label: 'Business Tracker',
+                icon: 'pi pi-fw pi-list',
+                url: 'https://businesstracker.gridcogh.com',
+                target: '_blank'
             },
+            {
+                label: 'Document Management',
+                icon: 'pi pi-fw pi-share-alt',
+                url: '#'
+            }
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
             // { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/uikit/overlay' },
             // { label: 'Media', icon: 'pi pi-fw pi-image', to: '/uikit/media' },
@@ -68,7 +68,7 @@ const model = ref([
             // { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/uikit/charts' },
             // { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/uikit/misc' }
         ]
-    },
+    }
     // {
     //     label: 'Prime Blocks',
     //     items: [

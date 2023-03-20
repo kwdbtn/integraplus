@@ -95,7 +95,7 @@ const applyScale = () => {
             <InputSwitch v-model="layoutConfig.ripple.value"></InputSwitch>
         </template>
 
-        <h5>Bootstrap</h5>
+        <h5>Theme 1</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('bootstrap4-light-blue', 'light')">
@@ -119,7 +119,7 @@ const applyScale = () => {
             </div>
         </div>
 
-        <h5>Material Design</h5>
+        <h5>Theme 2</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('md-light-indigo', 'light')">
@@ -143,7 +143,7 @@ const applyScale = () => {
             </div>
         </div>
 
-        <h5>Material Design Compact</h5>
+        <h5>Theme 3</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('mdc-light-indigo', 'light')">
@@ -167,7 +167,7 @@ const applyScale = () => {
             </div>
         </div>
 
-        <h5>Tailwind</h5>
+        <h5>Theme 4</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('tailwind-light', 'light')">
@@ -176,7 +176,7 @@ const applyScale = () => {
             </div>
         </div>
 
-        <h5>Fluent UI</h5>
+        <h5>Theme 5</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('fluent-light', 'light')">
@@ -185,7 +185,7 @@ const applyScale = () => {
             </div>
         </div>
 
-        <h5>PrimeOne Design - 2022</h5>
+        <h5>Theme 6</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('lara-light-indigo', 'light')">
@@ -229,7 +229,7 @@ const applyScale = () => {
             </div>
         </div>
 
-        <h5>PrimeOne Design - 2021</h5>
+        <h5>Theme 7</h5>
         <div class="grid">
             <div class="col-3">
                 <button class="p-link w-2rem h-2rem" @click="onChangeTheme('saga-blue', 'light')">
